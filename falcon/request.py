@@ -219,7 +219,7 @@ class Request(object):
             query_str = env['QUERY_STRING']
 
             if query_str:
-                self.query_string = uri.decode(query_str)
+                self.query_string = query_str
                 self._params = uri.parse_query_string(
                     self.query_string,
                     keep_blank_qs_values=self.options.keep_blank_qs_values,
@@ -904,7 +904,7 @@ class Request(object):
 
         if body:
             extra_params = uri.parse_query_string(
-                uri.decode(body),
+                body,
                 keep_blank_qs_values=self.options.keep_blank_qs_values,
             )
 

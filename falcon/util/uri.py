@@ -287,7 +287,10 @@ def parse_query_string(query_string, keep_blank_qs_values=False):
         if not (v or keep_blank_qs_values):
             continue
 
+        k = decode(k)
+
         if k in params:
+            v = decode(v)
             # The key was present more than once in the POST data.  Convert to
             # a list, or append the next value to the list.
             old_value = params[k]
@@ -309,7 +312,9 @@ def parse_query_string(query_string, keep_blank_qs_values=False):
                     # NOTE(kgriffs): Normalize the result in the case that
                     # some elements are empty strings, such that the result
                     # will be the same for 'foo=1,,3' as 'foo=1&foo=&foo=3'.
-                    v = [element for element in v if element]
+                    v = [decode(element) for element in v if element]
+            else:
+                v = decode(v)
 
             params[k] = v
 

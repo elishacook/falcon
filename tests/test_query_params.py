@@ -54,12 +54,15 @@ class _TestQueryParams(testing.TestBase):
 
         req = self.resource.req
 
-        # NOTE(kgriffs): For lists, get_param will return one of the
-        # elements, but which one it will choose is undefined.
-        self.assertIn(req.get_param('id'), [u'23', u'42'])
+        self.assertEqual(req.get_param('id'), '23,42')
 
-        self.assertEqual(req.get_param_as_list('id', int), [23, 42])
-        self.assertEqual(req.get_param('q'), u'\u8c46 \u74e3')
+    def test_json(self):
+        query_string = 'id=%7B%22foo%22%3A1%2C%22bar%22%3A1%7D'
+        self.simulate_request('/', query_string=query_string)
+
+        req = self.resource.req
+
+        self.assertEqual(req.get_param('id'), '{"foo":1,"bar":1}')
 
     def test_allowed_names(self):
         query_string = ('p=0&p1=23&2p=foo&some-thing=that&blank=&'
